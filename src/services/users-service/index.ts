@@ -17,8 +17,32 @@ export async function createUser({ email, password, name, img_url }: CreateUserP
   });
 }
 
+export async function updateUser({id, email, password, name, img_url }: UpdateUserParams): Promise<User> {  
+
+  await validateUniqueEmailOnUPdate(email, id);
+  
+  const hashedPassword = await bcrypt.hash(password, 12);
+ 
+  return userRepository.update(
+    id,
+    {    
+    email,
+    password: hashedPassword,    
+    name,
+    img_url
+  });    
+  
+}
+
 async function validateUniqueEmailOrFail(email: string) {
-  const userWithSameEmail = await userRepository.findByEmail(email);
+  const userWithSameEmail = await userRepository.findByEmail(email);  
+  if (userWithSameEmail) {
+    throw duplicatedEmailError();
+  }
+}
+
+async function validateUniqueEmailOnUPdate(email: string, id: number) {
+  const userWithSameEmail = await userRepository.findByEmailOnUPdate(email, id);  
   if (userWithSameEmail) {
     throw duplicatedEmailError();
   }
@@ -26,8 +50,11 @@ async function validateUniqueEmailOrFail(email: string) {
 
 export type CreateUserParams = Pick<User, 'email' | 'name' | 'password' | 'img_url'>;
 
+export type UpdateUserParams = Exclude<User, 'createdAt' | 'updatedAt'>;
+
 const userService = {
   createUser,
+  updateUser
 };
 
 export * from './errors';
