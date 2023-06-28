@@ -10,6 +10,7 @@ loadEnv();
 import { handleApplicationErrors } from '@/middlewares';
 import {
   usersRouter,
+  patientsRouter,
   authenticationRouter,
 } from '@/routers';
 
@@ -18,7 +19,8 @@ app
   .use(cors())
   .use(express.json())
   .get('/health', (_req, res) => res.send('OK!'))  
-  .use('/users', usersRouter)  
+  .use('/users', usersRouter)
+  .use('/patients', patientsRouter)    
   .use('/auth', authenticationRouter)  
   .use(handleApplicationErrors);
   
