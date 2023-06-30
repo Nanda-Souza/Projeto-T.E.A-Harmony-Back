@@ -27,6 +27,7 @@ export async function patientPost(req: AuthenticatedRequest, res: Response, next
       email: patient.email      
     });
   } catch (e) {
+    console.log(e);
     next(e);
   }
 }

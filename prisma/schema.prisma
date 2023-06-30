@@ -33,7 +33,7 @@ model Patient {
   userId          Int
   name            String   @db.VarChar(100)
   age             Int
-  diagnostic_date DateTime
+  diagnostic_date DateTime @db.Date
   doctor_name     String
   email           String   @db.VarChar(255)
   createdAt       DateTime @default(now())
